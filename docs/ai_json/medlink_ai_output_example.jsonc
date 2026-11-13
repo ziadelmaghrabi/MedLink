@@ -1,0 +1,38 @@
+// MedLink AI OUTPUT example (JSONC: comments are explanatory and must be removed before JSON parsing).
+// Source: MedLink_Question_Bank_Guide.md section 8.7.
+// This is a format demonstration only. The sample hypothesis/urgency are synthetic and NOT clinically validated.
+// Do not use this sample as a diagnosis, triage decision, or medical training label.
+{
+  // Must be one of the exact values shown in the Guide: EMERGENCY | URGENT | ROUTINE | UNDETERMINED.
+  // If any server-recomputed emergency rule fires, backend must enforce EMERGENCY as the minimum urgency.
+  "urgency": "UNDETERMINED",
+  // Short rationale. The example text is synthetic and must not be interpreted as medical advice.
+  "urgencyReason": "The questionnaire data alone does not establish a safe urgency level; clinician review and any necessary assessment are required.",
+  // Guide example uses a string ("Cardiology"); no specialty enum is defined in the supplied files.
+  "suggestedSpecialty": "Cardiology",
+  // Ranked possible conditions for physician review only; never expose raw hypotheses directly to the patient.
+  // Each confidence must be LOW, MEDIUM, or HIGH. Evidence IDs must exist in the submitted answers.
+  "hypotheses": [
+    {
+      "condition": "Non-cardiac chest pain (illustrative hypothesis; requires physician assessment)",
+      "confidence": "LOW",
+      "supportingAnswerIds": [
+        "CP_02_SHARP",
+        "CP_04_MEALS_LYING"
+      ],
+      "againstAnswerIds": []
+    }
+  ],
+  // Unknown or uncollected information; an unanswered item must not be interpreted as a negative answer.
+  "missingInformation": [
+    "Relevant examination findings, vital signs, and any additional history needed by the treating physician are not present in this questionnaire payload."
+  ],
+  // Follow-up questions intended for the clinician, not patient-facing treatment instructions.
+  "suggestedQuestionsForDoctor": [
+    "Please clarify the full clinical context and assess whether further evaluation is needed."
+  ],
+  // Backend must force this to true even if the model returns false.
+  "requiresPhysicianReview": true,
+  // Backend must enforce the approved disclaimer text.
+  "disclaimer": "Decision support only. Not a diagnosis."
+}
